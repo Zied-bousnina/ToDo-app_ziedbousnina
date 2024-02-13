@@ -1,0 +1,34 @@
+version: '3'
+services:
+  laravel-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - APP_NAME=Laravel
+      - APP_ENV=local
+      # ... add other Laravel environment variables
+
+  react-native-app:
+    image: node:14
+    container_name: react-native-app
+    working_dir: /app
+    volumes:
+      - ./path/to/your/react-native-app:/app
+    command: ["npm", "start"]
+
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: defaultdb
+      MYSQL_USER: avnadmin
+      MYSQL_PASSWORD: AVNS_JbL9P7ABkbGZD-T_yLQ
+      MYSQL_ROOT_PASSWORD: root_password
