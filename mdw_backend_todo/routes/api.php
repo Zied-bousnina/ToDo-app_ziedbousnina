@@ -20,8 +20,9 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
 Route::post('user/create', [UserController::class, 'register']);
+
+
 Route::post('user/login', [UserController::class, 'login']);
 Route::post('password/email', [ UserController::class, 'sendResetLinkEmail']);
 Route::post('password/code/check', [UserController::class, 'checkCode']);
@@ -38,5 +39,7 @@ Route::post('/user/logout', [UserController::class, 'logout']);
     Route::delete('/delete/{id}', [TaskController::class, 'delete']);
     Route::patch('/update/{id}', [TaskController::class, 'update']);
     Route::get('/readWithSortBy', [TaskController::class, 'readWithSortBy']);
+
+
     Route::get('/getStatistiqueByUser', [TaskController::class, 'getTaskStatistics']);
 });

@@ -22,6 +22,65 @@ class TaskController extends Controller
             'message' => 'Hello World'
         ]);
     }
+
+    /**
+ * Create a new task.
+ *
+ * @OA\Post(
+ *      path="/api/task",
+ *      operationId="createTask",
+ *      tags={"Task"},
+ *      summary="Create a new task",
+ *      description="Create a new task with the provided details.",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\RequestBody(
+ *          required=true,
+ *          @OA\JsonContent(
+ *              required={"title", "description", "due_date", "remind_at"},
+ *              @OA\Property(property="title", type="string", description="Task title"),
+ *              @OA\Property(property="description", type="string", description="Task description"),
+ *              @OA\Property(property="due_date", type="string", format="date-time", description="Due date of the task (YYYY-MM-DD HH:mm:ss)"),
+ *              @OA\Property(property="remind_at", type="string", format="date-time", description="Remind date of the task (YYYY-MM-DD HH:mm:ss)"),
+ *              @OA\Property(property="status", type="string", description="Task status, default is 'en attente'"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Task created successfully",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=true),
+ *              @OA\Property(property="message", type="string", example="Task created successfully"),
+ *
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=422,
+ *          description="Validation error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="The given data was invalid."),
+ *              @OA\Property(property="errors", type="object", example={"title": {"The title field is required."}}),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Error creating task"),
+ *              @OA\Property(property="error", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ */
     public function store(CreateTaskRequest $request)
     {
         try {
@@ -57,6 +116,56 @@ class TaskController extends Controller
         }
     }
 
+    /**
+ * Delete a task by ID.
+ *
+ * @OA\Delete(
+ *      path="/api/task/{id}",
+ *      operationId="deleteTask",
+ *      tags={"Task"},
+ *      summary="Delete a task",
+ *      description="Delete a task by its ID.",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID of the task to delete",
+ *          @OA\Schema(type="integer", format="int64"),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Task deleted successfully",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Task deleted successfully"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Task not found",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Task not found"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Error deleting task"),
+ *              @OA\Property(property="error", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ */
     public function delete($id)
     {
         try {
@@ -86,6 +195,70 @@ class TaskController extends Controller
             ]);
         }
     }
+
+    /**
+ * Update a task by ID.
+ *
+ * @OA\Patch(
+ *      path="/api/task/{id}",
+ *      operationId="updateTask",
+ *      tags={"Task"},
+ *      summary="Update a task",
+ *      description="Update a task by its ID with the provided details.",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="ID of the task to update",
+ *          @OA\Schema(type="integer", format="int64"),
+ *      ),
+ *      @OA\RequestBody(
+ *          required=false,
+ *          @OA\JsonContent(
+ *              @OA\Property(property="title", type="string", description="Task title"),
+ *              @OA\Property(property="description", type="string", description="Task description"),
+ *              @OA\Property(property="status", type="string", description="Task status"),
+ *              @OA\Property(property="user_id", type="integer", description="User ID associated with the task"),
+ *              @OA\Property(property="completed_at", type="string", format="date-time", description="Completion date of the task (YYYY-MM-DD HH:mm:ss)"),
+ *              @OA\Property(property="due_date", type="string", format="date-time", description="Due date of the task (YYYY-MM-DD HH:mm:ss)"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Task updated successfully",
+ *          @OA\JsonContent(
+ *
+ *              @OA\Property(property="message", type="string", example="Task updated successfully"),
+ *
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Task not found",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Task not found"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Error updating task"),
+ *              @OA\Property(property="error", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ */
     public function update(Request $request, $id)
     {
         try {
@@ -143,7 +316,41 @@ class TaskController extends Controller
 
 
 
-
+/**
+ * @OA\Get(
+ *      path="/api/task-statistics",
+ *      operationId="getTaskStatistics",
+ *      tags={"Task"},
+ *      summary="Get statistics for user tasks",
+ *      description="Returns various statistics for tasks belonging to the authenticated user.",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Successful operation",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="statistics", type="object",
+ *                  @OA\Property(property="en_attente", type="integer", description="Count of tasks with status 'en attente'"),
+ *                  @OA\Property(property="open", type="integer", description="Count of tasks with status 'open'"),
+ *                  @OA\Property(property="in_progress", type="integer", description="Count of tasks with status 'in progress'"),
+ *                  @OA\Property(property="accepted", type="integer", description="Count of tasks with status 'Accepted'"),
+ *                  @OA\Property(property="solved", type="integer", description="Count of tasks with status 'solved'"),
+ *                  @OA\Property(property="on_hold", type="integer", description="Count of tasks with status 'on hold'"),
+ *                  @OA\Property(property="overdue", type="integer", description="Count of tasks that are overdue"),
+ *                  @OA\Property(property="to_do", type="integer", description="Alias for 'en_attente'"),
+ *                  @OA\Property(property="open_tasks", type="integer", description="Alias for 'open'"),
+ *                  @OA\Property(property="due_today", type="integer", description="Count of tasks due today"),
+ *              ),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *      ),
+ *      @OA\Response(
+ *          response=403,
+ *          description="Forbidden",
+ *      ),
+ * )
+ */
 
     public function getTaskStatistics( Request $request )
     {
@@ -165,7 +372,54 @@ class TaskController extends Controller
         return response()->json(['statistics' => $statistics]);
     }
 
-
+/**
+ * Retrieve tasks with optional sorting.
+ *
+ * @OA\Get(
+ *      path="/api/readWithSortBy",
+ *      operationId="readTasksWithSortBy",
+ *      tags={"Task"},
+ *      summary="Retrieve tasks with optional sorting",
+ *      description="Retrieve tasks for the authenticated user with optional sorting based on specified parameters.",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\Parameter(
+ *          name="sort_by",
+ *          in="query",
+ *          description="Field to sort by (e.g., 'title')",
+ *          @OA\Schema(type="string", default="title"),
+ *      ),
+ *      @OA\Parameter(
+ *          name="sort_order",
+ *          in="query",
+ *          description="Sort order ('asc' or 'desc')",
+ *          @OA\Schema(type="string", default="asc"),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Tasks retrieved successfully",
+ *          @OA\JsonContent(
+ *
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Error retrieving tasks"),
+ *              @OA\Property(property="error", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ */
     public function readWithSortBy(Request $request)
     {
         $user_id = auth()->id(); // Get the ID of the authenticated user
@@ -178,7 +432,47 @@ class TaskController extends Controller
     }
 
 
-
+/**
+ * Retrieve a specific task by ID.
+ *
+ * @OA\Get(
+ *      path="/api/tasks/{id}",
+ *      operationId="getTaskById",
+ *      tags={"Task"},
+ *      summary="Retrieve a specific task",
+ *      description="Retrieve a specific task by ID.",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          description="ID of the task to retrieve",
+ *          required=true,
+ *          @OA\Schema(type="integer"),
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Task retrieved successfully",
+ *          @OA\JsonContent(
+ *
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Task not found",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Task not found"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="message", type="string", example="Error fetching task"),
+ *              @OA\Property(property="error", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ */
     public function show($id)
     {
         try {
@@ -231,6 +525,42 @@ class TaskController extends Controller
 
 
     // --------------------------------------------
+    /**
+ * Retrieve tasks for the authenticated user.
+ *
+ * @OA\Get(
+ *      path="/api/read",
+ *      operationId="readTasks",
+ *      tags={"Task"},
+ *      summary="Retrieve tasks",
+ *      description="Retrieve tasks for the authenticated user.",
+ *      security={{"bearerAuth":{}}},
+ *      @OA\Response(
+ *          response=200,
+ *          description="Tasks retrieved successfully",
+ *          @OA\JsonContent(
+ *
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthenticated",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Unauthenticated"),
+ *          ),
+ *      ),
+ *      @OA\Response(
+ *          response=500,
+ *          description="Server error",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="success", type="boolean", example=false),
+ *              @OA\Property(property="message", type="string", example="Error fetching tasks"),
+ *              @OA\Property(property="error", type="string", example="Internal Server Error"),
+ *          ),
+ *      ),
+ * )
+ */
     public function read(Request $request)
     {
         try {

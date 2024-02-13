@@ -23,8 +23,16 @@ php artisan migrate --path=database/migrations/2014_10_12_000000_create_users_ta
 ```bash
 php artisan migrate
 ```
+
+## Genrate Swagger documentation
+```bash
+ php artisan l5-swagger:generate
+```
+ #### http://your-app-url/api/documentation
+
 ### Step 4: Start the Development Server
 # Start the Laravel development server:
+
 
 ````bash
 php artisan serve
