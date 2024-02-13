@@ -1,6 +1,6 @@
 
 
-### APK test : https://www.dropbox.com/scl/fi/kj5tbmibxjn2cdi260nei/TODO_APPMDW.apk?rlkey=z1tj2kharn6lfmelrjnxsduxq&dl=0
+### APK VERSION 1.0 : https://www.dropbox.com/scl/fi/kj5tbmibxjn2cdi260nei/TODO_APPMDW.apk?rlkey=z1tj2kharn6lfmelrjnxsduxq&dl=0
 
 ##### MOBILE : check README.MD  ./MDW_ToDo_MObile
 ##### BACK-END : check README.MD  ./mdw_backend_todo
